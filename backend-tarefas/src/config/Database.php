@@ -25,4 +25,12 @@ class Database
         }
         return self::$instance;
     }
+
+    public static function query($sql, $params = [])
+    {
+        $conexao = self::getConnection();
+        $stmt = $conexao->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->fetchAll();
+    }
 }

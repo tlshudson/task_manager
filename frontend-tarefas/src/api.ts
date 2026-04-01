@@ -1,6 +1,6 @@
 import type { Task } from './types/Task';
 
-const API_URL = 'https://task_manager.test';
+const API_URL = 'http://backend-tarefas.test/tasks';
 
 const api = {
   getTasks: async (): Promise<Task[]> => {
@@ -8,13 +8,13 @@ const api = {
     if (!response.ok) throw new Error('Erro ao buscar tarefas');
     return await response.json();
   },
-  createTask: async (task: Omit<Task, 'id' | 'created_at'>): Promise<Task> => {
+  createTask: async (): Promise<Task> => {
     const response = await fetch(API_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(task)
+      body: JSON.stringify({ title: 'Minha nova tarefa' })
     });
     if (!response.ok) throw new Error('Erro ao criar tarefa');
     return await response.json();

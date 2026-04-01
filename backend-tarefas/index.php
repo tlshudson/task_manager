@@ -11,7 +11,7 @@ $parsedURI = parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH);
 
 $route = trim($uri, '/');
 
-switch ($uri) {
+switch ($route) {
     case 'tasks':
         $controller = new TaskController();
 
