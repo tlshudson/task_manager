@@ -7,22 +7,27 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 
 $method = $_SERVER['REQUEST_METHOD'];
-$parsedURI = parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH);
+$parsedURI = $_SERVER["REQUEST_URI"]; //remoção de "/" da URL
 
-$route = trim($uri, '/');
+$segments = explode('/', $parsedURI); //primeira limpeza e transformação em arrays
+$cleanSegments = array_values(array_filter($segments)); //limpeza dos arrays com valor vazio ""
+
+$route = $cleanSegments[0] ?? null; //definição da rota como 1 segmento do array limpo -> $cleanSegments
+$id = $cleanSegments[1] ?? null; 
 
 switch ($route) {
     case 'tasks':
         $controller = new TaskController();
-
-        if ($method === 'GET') {
+        if ($method === 'GET' && $id === null) {
             $controller->listar();
-        } elseif ($method === 'POST') {
+        } elseif ($method === 'GET' && is_numeric($id)) {
+            $controller->listarId($id);
+        } elseif ($method === 'DELETE' && is_numeric($id)) {
+            $controller->deletar($id);
+        } elseif ($method === 'POST' && $id === null) {
             $controller->inserir();
-        } elseif ($method === 'DELETE') {
-            $controller->deletar();
-        } elseif ($method === 'PUT') {
-            $controller->atualizar();
+        } elseif ($method === 'PUT' && is_numeric($id)) {
+            $controller->atualizar($id);
         } else {
             http_response_code(405);
             echo json_encode(["error" => "Método não permitido!"]);

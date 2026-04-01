@@ -33,4 +33,33 @@ class Database
         $stmt->execute($params);
         return $stmt->fetchAll();
     }
+
+    public static function queryId($sql, $params = [])
+    {
+        $conexao = self::getConnection();
+        $stmt = $conexao->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->fetch();
+    }
+    public static function insert($sql, $params = [])
+    {
+        $conexao = self::getConnection();
+        $stmt = $conexao->prepare($sql);
+        $stmt->execute($params);
+        return $conexao->lastInsertId();
+    }
+    public static function delete($sql, $params = [])
+    {
+        $conexao = self::getConnection();
+        $stmt = $conexao->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->rowCount();
+    }
+    public static function update($sql, $params = [])
+    {
+        $conexao = self::getConnection();
+        $stmt = $conexao->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->rowCount();
+    }
 }
