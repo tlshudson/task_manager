@@ -3,7 +3,7 @@ import type { Task } from "../../types/task";
 import { taskService } from "../../services/api";
 
 function TaskForm() {
-  const [tasks, setTasks] = useState<Task>([]);
+  const [tasks, setTasks] = useState<Task[]>([]);
 
   const [isLoading, setIsLoading] = useState(true);
 
@@ -22,7 +22,7 @@ function TaskForm() {
     LoadTasks();
   }, []);
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
+    <main>
       <h1 className="text-3xl font-bold text-center mb-8">
         Gerenciador de Tarefas
       </h1>
@@ -31,7 +31,7 @@ function TaskForm() {
       ) : (
         <pre>{JSON.stringify(tasks, null, 2)}</pre>
       )}
-    </div>
+    </main>
   );
 }
-export default function TaskForm();
+export default TaskForm;

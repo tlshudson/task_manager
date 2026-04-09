@@ -1,6 +1,6 @@
 import type { Task } from "../types/task";
 
-const BASE_URL = "http://backend-tarefas.test/";
+const BASE_URL = import.meta.env.VITE_API_URL;
 
 export const taskService = {
   async getAll(): Promise<Task[]> {
