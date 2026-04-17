@@ -1,7 +1,7 @@
 export type Task = {
   id: number;
   title: string;
-  description?: string;
-  is_completed: boolean;
+  status: 'pendente' | 'em_progresso' | 'concluido';
+  category?: string;
   created_at: string;
-}
+};

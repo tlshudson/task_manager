@@ -4,7 +4,7 @@ import { TaskItem } from './TaskItem';
 interface TaskListProps {
   tasks: Task[];
   loading: boolean;
-  onToggle: (id: number, currentStatus: boolean) => void;
+  onToggle: (task: Task) => void;
   onDelete: (id: number) => void;
 }
 
@@ -28,9 +28,9 @@ export function TaskList({ tasks, loading, onToggle, onDelete }: TaskListProps) 
   return (
     <ul className="group">
       {tasks.map((task) => (
-        <TaskItem
-          key={task.id}
-          task={task}
+        <TaskItem 
+          key={task.id} 
+          task={task} 
           onToggle={onToggle}
           onDelete={onDelete}
         />

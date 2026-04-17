@@ -12,7 +12,6 @@ export function useTasks() {
     setError(null);
     try {
       const data = await taskService.getTasks();
-      // Assume the backend returns an array of tasks. If it's wrapped in an object, we need to adjust this.
       setTasks(data || []);
     } catch (err: any) {
       setError(err.message || 'Erro ao carregar tarefas.');
@@ -25,9 +24,16 @@ export function useTasks() {
     fetchTasks();
   }, [fetchTasks]);
 
-  const addTask = async (title: string, description?: string) => {
+  const addTask = async (title: string, category?: string) => {
     try {
-      const newTask = await taskService.createTask(title, description);
+      const response = await taskService.createTask(title, category);
+      const newTask: Task = {
+        id: response.id,
+        title,
+        status: 'pendente',
+        category: category || '',
+        created_at: new Date().toISOString()
+      };
       setTasks((prev) => [newTask, ...prev]);
     } catch (err: any) {
       setError(err.message || 'Erro ao criar tarefa.');
@@ -35,18 +41,14 @@ export function useTasks() {
     }
   };
 
-  const toggleTaskStatus = async (id: number, currentStatus: boolean) => {
+  const toggleTaskStatus = async (task: Task) => {
+    const newStatus = task.status === 'concluido' ? 'pendente' : 'concluido';
+    const updatedTask: Task = { ...task, status: newStatus };
     try {
-      // Optimistic Update
-      setTasks((prev) =>
-        prev.map((t) => (t.id === id ? { ...t, is_completed: !currentStatus } : t))
-      );
-      await taskService.updateTask(id, { is_completed: !currentStatus });
+      setTasks((prev) => prev.map((t) => (t.id === task.id ? updatedTask : t)));
+      await taskService.updateTask(task.id, updatedTask);
     } catch (err: any) {
-      // Revert optimistic update
-      setTasks((prev) =>
-        prev.map((t) => (t.id === id ? { ...t, is_completed: currentStatus } : t))
-      );
+      setTasks((prev) => prev.map((t) => (t.id === task.id ? task : t)));
       setError(err.message || 'Erro ao atualizar tarefa.');
       throw err;
     }
@@ -54,11 +56,9 @@ export function useTasks() {
 
   const removeTask = async (id: number) => {
     try {
-      // Optimistic Delete
       setTasks((prev) => prev.filter((t) => t.id !== id));
       await taskService.deleteTask(id);
     } catch (err: any) {
-      // To properly revert, we'd need to store the deleted task, but for now we re-fetch to ensure sync
       fetchTasks();
       setError(err.message || 'Erro ao deletar tarefa.');
       throw err;

@@ -4,38 +4,40 @@ import { Button } from '../UI/Button';
 
 interface TaskItemProps {
   task: Task;
-  onToggle: (id: number, currentStatus: boolean) => void;
+  onToggle: (task: Task) => void;
   onDelete: (id: number) => void;
 }
 
 export function TaskItem({ task, onToggle, onDelete }: TaskItemProps) {
+  const isCompleted = task.status === 'concluido';
+
   return (
     <li className={`
       flex items-center justify-between p-4 mb-3 rounded-xl border transition-all duration-300
-      ${task.is_completed
-        ? 'bg-gray-50/50 border-gray-200 dark:bg-gray-800/30 dark:border-gray-800'
+      ${isCompleted 
+        ? 'bg-gray-50/50 border-gray-200 dark:bg-gray-800/30 dark:border-gray-800' 
         : 'bg-white border-gray-100 shadow-sm hover:shadow-md dark:bg-gray-800 dark:border-gray-700'
       }
     `}>
       <div className="flex items-center space-x-4 flex-1">
-        <Checkbox
-          checked={task.is_completed}
-          onChange={() => onToggle(task.id, task.is_completed)}
+        <Checkbox 
+          checked={isCompleted}
+          onChange={() => onToggle(task)}
         />
         <div className="flex flex-col">
-          <span className={`text-base font-medium transition-all duration-300 ${task.is_completed ? 'line-through text-gray-400' : 'text-gray-800 dark:text-gray-100'}`}>
+          <span className={`text-base font-medium transition-all duration-300 ${isCompleted ? 'line-through text-gray-400' : 'text-gray-800 dark:text-gray-100'}`}>
             {task.title}
           </span>
-          {task.description && (
-            <span className={`text-sm mt-0.5 ${task.is_completed ? 'text-gray-400' : 'text-gray-500 dark:text-gray-400'}`}>
-              {task.description}
+          {task.category && (
+            <span className={`text-sm mt-0.5 ${isCompleted ? 'text-gray-400' : 'text-gray-500 dark:text-gray-400'}`}>
+              Categoria: {task.category}
             </span>
           )}
         </div>
       </div>
-
-      <Button
-        variant="danger"
+      
+      <Button 
+        variant="danger" 
         onClick={() => onDelete(task.id)}
         className="!p-2 ml-4 rounded-lg opacity-0 md:opacity-100 group-hover:opacity-100 focus:opacity-100 transition-opacity"
         aria-label="Deletar tarefa"
