@@ -1,7 +1,7 @@
-export interface Task {
-id: number;
-title: string;
-status: 'pending' | 'completed';
-category: string;
-created_at: string;
+export type Task = {
+  id: number;
+  title: string;
+  description?: string;
+  is_completed: boolean;
+  created_at: string;
 }

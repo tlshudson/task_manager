@@ -5,8 +5,16 @@ require_once __DIR__ . '/src/controllers/TaskController.php';
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, Authorization, Accept");
 
 $method = $_SERVER['REQUEST_METHOD'];
+
+// Handle preflight requests
+if ($method === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
+
 $parsedURI = $_SERVER["REQUEST_URI"]; //remoção de "/" da URL
 
 $segments = explode('/', $parsedURI); //primeira limpeza e transformação em arrays
